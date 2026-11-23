@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="248" height="54" viewBox="0 96 248 54" fill="none">
+<g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="28" cy="104" r="3.2" fill="#fff" stroke="none"/>
+<path d="M28 107.5 V112"/>
+<path d="M8 114 H48"/>
+<path d="M8 114 L13 132"/>
+<path d="M48 114 L43 132"/>
+<path d="M5 132 H21"/>
+<path d="M5 132 Q13 141 21 132"/>
+<path d="M35 132 H51"/>
+<path d="M35 132 Q43 141 51 132"/>
+</g>
+<text x="62" y="118" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="15" letter-spacing="0.3">Chambers of</text><text x="62" y="136" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="15" letter-spacing="0.3">Advocate Selva Kumar</text>
+</svg>
