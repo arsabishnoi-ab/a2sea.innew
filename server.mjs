@@ -3,7 +3,7 @@ import https from "node:https";
 import fs from "node:fs";
 import path from "node:path";
 
-const ROOT = path.resolve("C:/WebsiteMirror/lusion/lusion.co");
+const ROOT = path.resolve(import.meta.dirname);
 const CDN = "https://lusion.dev";
 const PORT = Number(process.env.PORT) || 4173;
 
