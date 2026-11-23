@@ -1,10 +1,8 @@
 import http from "node:http";
-import https from "node:https";
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname);
-const CDN = "https://lusion.dev";
 const PORT = Number(process.env.PORT) || 4173;
 
 const MIME = {
@@ -27,16 +25,6 @@ const MIME = {
   ".buf": "application/octet-stream",
   ".txt": "text/plain; charset=utf-8",
 };
-
-const HOP = new Set([
-  "content-type",
-  "content-length",
-  "content-range",
-  "accept-ranges",
-  "cache-control",
-  "etag",
-  "last-modified",
-]);
 
 function resolveLocal(urlPath) {
   let decoded;
@@ -91,40 +79,6 @@ function sendFile(req, res, file) {
   fs.createReadStream(file).pipe(res);
 }
 
-function proxyAsset(req, res, urlPath, search) {
-  const target = new URL(urlPath + (search || ""), CDN);
-  const headers = {
-    "user-agent": req.headers["user-agent"] || "Mozilla/5.0",
-    accept: req.headers.accept || "*/*",
-  };
-  if (req.headers.range) headers.range = req.headers.range;
-
-  const upstream = https.request(
-    target,
-    { method: req.method === "HEAD" ? "HEAD" : "GET", headers },
-    (incoming) => {
-      const out = {};
-      for (const [key, value] of Object.entries(incoming.headers)) {
-        if (HOP.has(key) && value) out[key] = value;
-      }
-      res.writeHead(incoming.statusCode || 502, out);
-      if (req.method === "HEAD") {
-        incoming.resume();
-        res.end();
-        return;
-      }
-      incoming.pipe(res);
-    }
-  );
-  upstream.on("error", () => {
-    if (!res.headersSent) {
-      res.writeHead(502, { "Content-Type": "text/plain; charset=utf-8" });
-    }
-    res.end("Asset proxy failed");
-  });
-  upstream.end();
-}
-
 const server = http.createServer((req, res) => {
   const url = new URL(req.url || "/", "http://127.0.0.1");
   const pathname = url.pathname;
@@ -145,17 +99,11 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (pathname.startsWith("/assets/")) {
-    proxyAsset(req, res, pathname, url.search);
-    return;
-  }
-
   res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
   res.end("Not found");
 });
 
 server.listen(PORT, "127.0.0.1", () => {
-  console.log(`Lusion site running at http://127.0.0.1:${PORT}`);
+  console.log(`a2sea site running at http://127.0.0.1:${PORT}`);
   console.log(`Serving ${ROOT}`);
-  console.log(`Missing /assets requests proxy to ${CDN}`);
 });
